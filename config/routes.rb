@@ -3,4 +3,7 @@ Rails.application.routes.draw do
   devise_for :users
   resources :dogs
   root to: "dogs#index"
+
+  put '/dog/:id/like', to: 'dogs#like', as: 'like'
+
 end

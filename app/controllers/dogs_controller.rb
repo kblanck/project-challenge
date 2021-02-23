@@ -1,10 +1,12 @@
 class DogsController < ApplicationController
+  include Pagy::Backend
+
   before_action :set_dog, only: [:show, :edit, :update, :destroy]
 
   # GET /dogs
   # GET /dogs.json
   def index
-    @dogs = Dog.all
+    @pagy, @dogs = pagy(Dog.all, page: params[:page], items: 5)
   end
 
   # GET /dogs/1
@@ -44,7 +46,7 @@ class DogsController < ApplicationController
   def update
     respond_to do |format|
       if @dog.update(dog_params)
-        @dog.images.attach(params[:dog][:image]) if params[:dog][:image].present?
+        @dog.images.attach(params[:dog][:images]) if params[:dog][:images].present?
 
         format.html { redirect_to @dog, notice: 'Dog was successfully updated.' }
         format.json { render :show, status: :ok, location: @dog }
@@ -63,6 +65,13 @@ class DogsController < ApplicationController
       format.html { redirect_to dogs_url, notice: 'Dog was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  # LIKE BUTTON
+  def like
+    @dog = Dog.all.find(params[:id])
+    Like.create(user_id: current_user.id, dog_id: @dog.id)
+    # redirect_to dog_path(@dog)
   end
 
   private

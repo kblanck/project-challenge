@@ -1,1 +1,10 @@
-<%= render partial: 'thumbnail', collection: @dogs, as: :dog %>
+<% @dogs.each_with_index do |dog, index| %>
+    <%= render partial: 'thumbnail', locals:{dog: dog} %>
+    <% if index % 2 === 1 %>
+        <%= image_tag 'https://pic.ebid.net/upload_big/6/5/1/uo_1527029046-13646-202.jpg',
+                        alt: "Ad",
+                        size: "300x300" 
+                        %>
+    <% end %>
+<% end %>
+<%= pagy_nav(@pagy).html_safe %>
